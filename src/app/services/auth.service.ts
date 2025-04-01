@@ -1,4 +1,5 @@
-import { effect, Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { effect, inject, Injectable, signal } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
 const STORE_KEY = 'login';
@@ -12,6 +13,7 @@ const loadFromLocalStorage = () => {
   providedIn: 'root',
 })
 export class AuthService {
+  private http = inject(HttpClient);
   login = signal<boolean>(loadFromLocalStorage());
   constructor() {}
 
@@ -28,5 +30,9 @@ export class AuthService {
     localStorage.removeItem(STORE_KEY);
     this.login.set(false);
     window.location.reload();
+  }
+
+  loginAuth(data: any) {
+    return this.http.post('https://fakestoreapi.com/auth/login', data);
   }
 }
